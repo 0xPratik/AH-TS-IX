@@ -66,11 +66,10 @@ export const createAH = async (
 
     const instruction = createCreateAuctionHouseInstruction(accounts, args);
 
-    const { blockhash } = await connection.getLatestBlockhash('finalized');
+    const { blockhash } = await connection.getLatestBlockhash();
 
     const transaction = new anchor.web3.Transaction({
-      recentBlockhash: blockhash,
-      feePayer: wallet.publicKey
+      recentBlockhash: blockhash
     });
 
     transaction.add(instruction);
