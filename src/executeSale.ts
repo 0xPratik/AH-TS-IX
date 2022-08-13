@@ -113,7 +113,18 @@ export const executeSale = async (
       programAsSignerBump: programAsSignerBump
     };
 
-    // const args: ExecuteSaleInstructionArgs = {};
+    const instruction = createExecuteSaleInstruction(accounts, args);
+    const { blockhash } = await connection.getLatestBlockhash();
+    const transaction = new anchor.web3.Transaction({
+      recentBlockhash: blockhash
+    });
+
+    transaction.add(instruction);
+    wallet.signTransaction(transaction);
+    const rawTx = transaction.serialize();
+    const sig = await connection.sendRawTransaction(rawTx);
+    await connection.confirmTransaction(sig, 'confirmed');
+    return sig;
   } catch (error) {
     console.log('ERROR In Execute Sale', error);
   }
