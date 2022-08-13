@@ -1,6 +1,7 @@
 import * as anchor from '@project-serum/anchor';
 import { PROGRAM_ID } from '@metaplex-foundation/mpl-auction-house';
 import { TOKEN_METADATA_PROGRAM_ID } from './constants';
+
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID
@@ -24,6 +25,16 @@ export const AuctionHouse = {
   canChangeSalePrice: false,
   requiresSignOff: false
 };
+
+export async function getAuctionHouseBuyerEscrow(
+  auctionHouse: anchor.web3.PublicKey,
+  wallet: anchor.web3.PublicKey
+): Promise<[anchor.web3.PublicKey, number]> {
+  return await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(AUCTION_HOUSE), auctionHouse.toBuffer(), wallet.toBuffer()],
+    PROGRAM_ID
+  );
+}
 
 export async function getAuctionHouseProgramAsSigner(): Promise<
   [anchor.web3.PublicKey, number]
